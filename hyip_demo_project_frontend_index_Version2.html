@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Dashboard</title></head>
+<body>
+  <h2>Dashboard</h2>
+  <p>Balance: <span id="balance">-</span></p>
+  <button onclick="deposit()">Deposit</button>
+  <button onclick="withdraw()">Withdraw</button>
+  <script>
+    const api='http://localhost:4000/api';
+    const token=localStorage.getItem('token');
+    async function loadBalance(){
+      let r=await fetch(api+'/user/balance',{headers:{Authorization:'Bearer '+token}});
+      let d=await r.json(); balance.innerText=d.balance;
+    }
+    loadBalance();
+    async function deposit(){
+      let amt=prompt('Amount?'); let m=prompt('Method?'); let t=prompt('Txn ID?');
+      let r=await fetch(api+'/deposit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({amount:amt,method:m,txn_id:t})});
+      alert((await r.json()).message);
+    }
+    async function withdraw(){
+      let amt=prompt('Amount?');
+      let r=await fetch(api+'/withdraw',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({amount:amt})});
+      alert((await r.json()).message);
+    }
+  </script>
+</body>
+</html>

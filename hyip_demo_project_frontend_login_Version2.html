@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button type="submit">Login</button>
+  </form>
+  <div id="msg"></div>
+  <script>
+    const api = 'http://localhost:4000/api';
+    document.getElementById('loginForm').onsubmit = async e => {
+      e.preventDefault();
+      let email = email.value, password = password.value;
+      let r = await fetch(api+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+      let d = await r.json();
+      if(r.ok){ localStorage.setItem('token',d.token); location='index.html'; }
+      else msg.innerText=d.error;
+    };
+  </script>
+</body>
+</html>

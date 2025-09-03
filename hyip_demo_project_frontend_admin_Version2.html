@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Admin Panel</title></head>
+<body>
+  <h2>Admin Panel</h2>
+  <h3>Deposits</h3>
+  <div id="deposits"></div>
+  <h3>Withdraws</h3>
+  <div id="withdraws"></div>
+  <script>
+    const api='http://localhost:4000/api';
+    const token=localStorage.getItem('token');
+    async function load(){
+      let dep=await fetch(api+'/admin/deposits',{headers:{Authorization:'Bearer '+token}}); dep=await dep.json();
+      deposits.innerHTML=dep.deposits.map(d=>`${d.amount} | ${d.method} <button onclick="approveDep(${d.id})">Approve</button>`).join('<br>');
+      let wd=await fetch(api+'/admin/withdraws',{headers:{Authorization:'Bearer '+token}}); wd=await wd.json();
+      withdraws.innerHTML=wd.withdraws.map(w=>`${w.amount} <button onclick="approveWd(${w.id})">Approve</button>`).join('<br>');
+    }
+    async function approveDep(id){await fetch(api+'/admin/deposits/'+id+'/approve',{method:'POST',headers:{Authorization:'Bearer '+token}});load();}
+    async function approveWd(id){await fetch(api+'/admin/withdraws/'+id+'/approve',{method:'POST',headers:{Authorization:'Bearer '+token}});load();}
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Register</title></head>
+<body>
+  <h2>Register</h2>
+  <form id="regForm">
+    <input id="name" placeholder="Name"><br>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button>Register</button>
+  </form>
+  <div id="msg"></div>
+  <script>
+    const api='http://localhost:4000/api';
+    regForm.onsubmit=async e=>{
+      e.preventDefault();
+      let r=await fetch(api+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name.value,email:email.value,password:password.value})});
+      let d=await r.json();
+      msg.innerText=d.message||d.error;
+      if(r.ok) setTimeout(()=>location='login.html',1000);
+    };
+  </script>
+</body>
+</html>
